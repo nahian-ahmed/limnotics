@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limnotics</title>
+    
+    <!-- Empty href initially; JavaScript will instantly inject the correct light/dark version -->
+    <link id="favicon" rel="icon" href="" type="image/png">
+    
+    <!-- Pre-load script prevents "flash" of incorrect colors before the page renders -->
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    </script>
+
+    <style>
+        /* CSS Variables for dynamic theme switching */
+        :root {
+            --bg-color: #f4f4f4;
+            --container-bg: #fff;
+            --text-color: #333;
+            --link-color: #000080;
+            --border-color: #ccc;
+            --toggle-bg: #ccc;
+            --toggle-active: #000080;
+        }
+        
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #f4f4f4;
+            --link-color: #66b2ff;
+            --border-color: #444;
+            --toggle-bg: #555;
+            --toggle-active: #66b2ff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        header, section {
+            background: var(--container-bg);
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .main-lockup {
+            /* Adjust this height to scale your horizontal lockup properly */
+            height: 60px; 
+            width: auto;
+        }
+
+        /* --- iOS Style Toggle Switch --- */
+        .theme-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--toggle-bg);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--toggle-active);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--toggle-active);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+        /* ------------------------------- */
+
+        p {
+            margin: 0;
+        }
+
+        a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        .theme-icon {
+            width: 18px;
+            height: 18px;
+            /* currentColor forces the SVG to use the active --text-color */
+            color: var(--text-color); 
+            transition: color 0.3s ease;
+        }
+        
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <h1>
+            <!-- The horizontal lockup replaces both the old logo and the H1 text -->
+            <img id="main-logo" src="" alt="Limnotics" class="main-lockup"> 
+        </h1>
+        
+        <!-- New iOS Style Toggle with Monochrome SVGs -->
+        <div class="theme-toggle-wrapper">
+            <!-- Sun Icon -->
+            <svg class="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+
+            <label class="switch" aria-label="Toggle Dark Mode">
+                <input type="checkbox" id="theme-toggle">
+                <span class="slider"></span>
+            </label>
+
+            <!-- Moon Icon -->
+            <svg class="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </div>
+        
+    </div>
+
+    <p>Limnology + {"analytics", "informatics", "robotics"} for water monitoring and precision aquaculture.</p>
+</header>
+
+<script>
+    // Asset references directly using your specific filenames
+    const faviconElement = document.getElementById('favicon');
+    const mainLogoElement = document.getElementById('main-logo');
+    const toggleCheckbox = document.getElementById('theme-toggle');
+
+    // Filenames for Favicons 
+    const faviconLight = 'png/limnotics_logomark_light_300dpi.png'; // Black logo for light tabs
+    const faviconDark = 'png/limnotics_logomark_dark_300dpi.png';   // White logo for dark tabs (Fixed missing slash)
+
+    // Filenames for Master Lockups 
+    const logoLight = 'png/limnotics_lockup_horizontal_light_300dpi.png';
+    const logoDark = 'png/limnotics_lockup_horizontal_dark_300dpi.png';
+
+    // Master function to apply themes and swap images
+    function applyTheme(isDark) {
+        if (isDark) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            faviconElement.href = faviconDark;
+            mainLogoElement.src = logoDark;
+            toggleCheckbox.checked = true; // Updates the slider position
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            faviconElement.href = faviconLight;
+            mainLogoElement.src = logoLight;
+            toggleCheckbox.checked = false; // Updates the slider position
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    // 1. Init: Run once on page load to set correct images and slider position
+    const currentThemeIsDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    applyTheme(currentThemeIsDark);
+
+    // 2. Change logic: Listen for the slider being toggled
+    toggleCheckbox.addEventListener('change', (e) => {
+        applyTheme(e.target.checked);
+    });
+
+    // 3. System logic: Automatically swap if user changes OS preferences (and hasn't manually clicked the toggle yet)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if (!localStorage.getItem('theme')) {
+            applyTheme(event.matches);
+        }
+    });
+</script>
+
+</body>
+</html>
